@@ -17,7 +17,6 @@
 mono_crash.*
 
 # Build results
-[Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
@@ -399,3 +398,7 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 .vs/
+
+# Ignore config.xml in Debug folder
+config.xml
+*.apk
