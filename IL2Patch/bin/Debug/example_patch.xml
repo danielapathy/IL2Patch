@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Patches>
+    <Patch arch="arm64-v8a">
+        <Description>Don't allow combo to drop</Description>
+        <Find>00d8215e0020281ee0879f1a</Find>
+        <Replace>00d8215e0020281e60008052</Replace>
+    </Patch>
+    <Patch arch="arm64-v8a">
+        <Description>Don't allow 'Great' combo's, only 'Perfect'</Description>
+        <Find>600080520200001440008052</Find>
+        <Replace>600080520200001460008052</Replace>
+    </Patch>
+    <Patch arch="arm64-v8a">
+        <Description>Set score type to 'Perfect' only</Description>
+        <Find>881e343900102e1e0821201e0059201e</Find>
+        <Replace>881e343900102e1e0821201e0058201e</Replace>
+    </Patch>
+    <Patch arch="arm64-v8a">
+        <Description>Prevent walls from breaking combo</Description>
+        <Find>1f050071a0050054e8060035</Find>
+        <Replace>1f050071a005005437000014</Replace>
+    </Patch>
+</Patches>
