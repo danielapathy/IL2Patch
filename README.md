@@ -1,4 +1,4 @@
-![Banner Image](sample.png)
+![Banner Image](assets/sample.png)
 # IL2Patch
 
 IL2Patch is a specialized tool for modifying IL2CPP Unity Android applications through binary patching of `libil2cpp.so` libraries. It enables direct modification of game logic and behavior through hex pattern matching and replacement.
