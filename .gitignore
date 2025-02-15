@@ -401,3 +401,5 @@ FodyWeavers.xsd
 # Ignore config.xml in Debug folder
 config.xml
 *.apk
+temp_apk
+*.exe

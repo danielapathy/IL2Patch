@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 using ICSharpCode.SharpZipLib.Zip;
+using System.Text.RegularExpressions;
 
 namespace IL2Patch
 {
@@ -712,11 +713,15 @@ namespace IL2Patch
             return rel;
         }
 
-        static byte[] StringToByteArray(string hex)
+        public static byte[] StringToByteArray(string hex)
         {
-            return Enumerable.Range(0, hex.Length / 2)
-                .Select(x => Convert.ToByte(hex.Substring(x * 2, 2), 16))
-                .ToArray();
+            // Remove any non-hexadecimal characters (e.g., spaces, commas, '0x', etc.)
+            string cleanedHex = Regex.Replace(hex, @"[^0-9a-fA-F]", "");
+
+            // Now we can proceed with the same logic to convert the cleaned hex string to bytes
+            return Enumerable.Range(0, cleanedHex.Length / 2)
+                             .Select(x => Convert.ToByte(cleanedHex.Substring(x * 2, 2), 16))
+                             .ToArray();
         }
 
         static void PrintHexView(byte[] data, int index, int length, int contextBytes = 8)

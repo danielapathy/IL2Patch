@@ -25,17 +25,17 @@ IL2Patch performs the following operations:
 1. Place target APK in IL2Patch directory
 2. Create `patch.xml` with your modifications
 3. Run IL2Patch
-4. Collect modified APK
+4. Collect modified APK (`signed.apk` or `aligned.apk`)
 
 ### Keystore
 
 A debug keystore is included in the `keystore` folder:
 - `debug.keystore`
-- `password.txt` (contains: yourpassword)
+- `password.txt` (contains: android)
 
-You can also create your own keystore:
+For production use, create your own keystore:
 ```bash
-keytool.exe -genkeypair -v -keystore "IL2Patch\keystore\debug.keystore" -keyalg RSA -keysize 2048 -validity 10000 -alias android -dname "CN=Android, OU=Android, O=Android, L=Android, ST=Android, C=US" -storepass yourpassword -keypass yourpassword
+keytool -genkey -v -keystore android.keystore -alias android -keyalg RSA -keysize 2048 -validity 10000
 ```
 
 ## Patch Examples
@@ -70,6 +70,26 @@ Patches must be enclosed in proper XML structure:
 </Patches>
 ```
 
+### Supported Hex Format Variations for `Find` and `Replace`
+
+When defining hex patterns, the `Find` and `Replace` fields can support a variety of formats for the byte sequences. The tool will automatically handle common variations, including:
+
+1. **Standard continuous hex string**:  
+   - Example: `600080520200001440008052`
+   - The pattern is a single string of hex characters with no delimiters.
+
+2. **Space-separated hex values**:  
+   - Example: `00 d8 21 5e 00 20 28 1e 60 00 80 52`
+   - The hex values are separated by spaces.
+
+3. **Hex values with `0x` prefix**:  
+   - Example: `0x00 0xd8 0x21 0x5e 0x00 0x20 0x28 0x1e 0x60 0x00 0x80 0x52`
+   - Each byte is prefixed with `0x`, often seen in many disassembly tools.
+
+4. **Comma-separated hex values with `0x` prefix**:  
+   - Example: `0x00, 0xd8, 0x21, 0x5e, 0x00, 0x20, 0x28, 0x1e, 0x60, 0x00, 0x80, 0x52`
+   - Hex bytes separated by commas, commonly used in code snippets.
+
 ## Build Tools Setup
 
 First run will prompt for:
@@ -81,4 +101,4 @@ Configuration saves to `config.xml`
 
 ## Disclaimer
 
-This tool is for educational and research purposes only. Users are responsible for compliance with applicable terms of service and local regulations.
+This tool is for educational and research purposes only. Users are responsible for compliance with applicable terms of service and local regulations. 
