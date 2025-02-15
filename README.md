@@ -1,6 +1,6 @@
 # IL2Patch
 
-![Banner Image](assets/sample.png)
+![Banner Image](assets/Preview.png)
 
 ## Overview
 
