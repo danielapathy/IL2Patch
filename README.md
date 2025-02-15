@@ -13,6 +13,8 @@ IL2Patch is a specialized tool for modifying IL2CPP Unity Android applications t
 
 ## How It Works
 
+![Terminal Preview](assets/Animation.gif)
+
 IL2Patch performs the following operations:
 1. APK extraction
 2. Architecture detection and `libil2cpp.so` modification

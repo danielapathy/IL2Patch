@@ -403,3 +403,4 @@ config.xml
 *.apk
 temp_apk
 *.exe
+*.idsig
