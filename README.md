@@ -15,13 +15,22 @@ IL2Patch is a specialized tool for modifying IL2CPP Unity Android applications t
 
 ![Terminal Preview](assets/Animation.gif)
 
-IL2Patch performs the following operations:
-1. APK extraction
-2. Architecture detection and `libil2cpp.so` modification
-3. Binary patching using hex patterns
-4. APK repackaging
-5. Zipalign optimization
-6. APK signing
+## What is IL2CPP and Why Patch It?
+
+IL2CPP (Intermediate Language to C++) is a Unity scripting backend that converts managed C# code into native machine code. This improves performance and security but also makes modifying the game’s logic more difficult.  
+
+In IL2CPP-based Unity games, **most of the core gameplay logic, scripting, and mechanics are compiled into the `libil2cpp.so` binary**, rather than being stored as human-readable C# code. This means traditional methods of modifying `.NET` assemblies won’t work, and any changes must be made directly at the binary level.  
+
+Patching IL2CPP-based applications involves:  
+
+1. Extracting the APK and locating `libil2cpp.so`  
+2. Identifying and modifying relevant hex patterns in the binary  
+3. Repacking the APK while maintaining correct compression settings (e.g., `resources.arsc`)  
+4. **Aligning the package** to ensure files like `resources.arsc` and native libraries are at proper byte boundaries  
+5. Signing the APK to ensure it can be installed  
+
+Because modifying an APK disrupts its structure, alignment must be restored before signing to prevent installation failures or performance issues. This process is tedious and requires multiple test runs when developing patches or cheats. **IL2Patch automates this entire workflow, making IL2CPP modifications faster.**
+
 
 ## Setup & Usage
 
