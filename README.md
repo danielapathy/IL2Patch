@@ -1,58 +1,87 @@
-![Banner Image](assets/sample.png)
-
 # IL2Patch
 
-IL2Patch is a specialized tool for modifying IL2CPP Unity Android applications through binary patching of `libil2cpp.so` libraries. It enables direct modification of game logic and behavior through hex pattern matching and replacement.
+![Banner Image](assets/sample.png)
 
-## Features
+## Overview
 
-- Multi-architecture support (arm64-v8a, armeabi-v7a, x86, x86_64)
-- Automated APK handling (unpack, patch, repack)
-- Zipalign optimization
-- APK signing
-- Debug logging
+IL2Patch is a specialized tool designed to modify IL2CPP-based Unity Android applications. By directly patching the `libil2cpp.so` library, IL2Patch enables precise manipulation of game logic and behavior through hex pattern matching and replacement.
 
-## How It Works
+## 🛠️ Key Features
+
+- **Multi-Architecture Support:** Compatible with `arm64-v8a`, `armeabi-v7a`, `x86`, and `x86_64` architectures.
+- **Automated APK Handling:** Streamlines the process of unpacking, patching, and repacking APK files.
+- **Zipalign Optimization:** Ensures optimal APK alignment for enhanced performance.
+- **APK Signing:** Includes integrated APK signing for immediate installation on Android devices.
+- **Detailed Debug Logging:** Provides comprehensive logs for easy troubleshooting and patch verification.
+
+
+## ⚙️ How It Works
+
+IL2CPP (Intermediate Language to C++) is a Unity scripting backend that transforms C\# code into native machine code. This enhances performance and security, but also complicates game modification. With IL2CPP, core gameplay logic is compiled into the `libil2cpp.so` binary, necessitating direct binary-level modifications.
+
+IL2Patch automates the entire patching process, making IL2CPP modifications faster and more reliable.
 
 ![Terminal Preview](assets/Animation.gif)
 
-### What is IL2CPP and Why Patch It?
+The patching process can be broken down into these key steps:
 
-IL2CPP (Intermediate Language to C++) is a Unity scripting backend that converts managed C# code into native machine code. This improves performance and security but also makes modifying the game's logic more difficult.
+1. **Extraction:** The target APK is extracted, and the `libil2cpp.so` library is located.
+2. **Modification:** Relevant hex patterns within the `libil2cpp.so` file are identified and modified according to user-defined patches.
+3. **Repackaging:** The modified files are recompressed and packaged back into a new APK.
+4. **Optimization:** The recompiled APK is optimized using Zipalign.
+5. **Signing:** The final APK is signed with a keystore for installation.
 
-In IL2CPP-based Unity games, **most of the core gameplay logic, scripting, and mechanics are compiled into the `libil2cpp.so` binary**, rather than being stored as human-readable C# code. This means traditional methods of modifying `.NET` assemblies won't work, and any changes must be made directly at the binary level.
+## 🚀 Getting Started
 
-The patching process involves:
+### Prerequisites
 
-1. Extracting the APK and locating `libil2cpp.so`
-2. Identifying and modifying relevant hex patterns in the binary
-3. Repacking the APK while maintaining correct compression settings
-4. **Aligning the package** to ensure proper byte boundaries
-5. Signing the APK to ensure it can be installed
+* Ensure you have the Android SDK installed. IL2Patch will prompt you for the location on the first run.
+* Familiarize yourself with hex editing concepts.
 
-IL2Patch automates this entire workflow, making IL2CPP modifications faster and more reliable.
 
-## Setup & Usage
+### Setup Steps
 
-1. Place target APK in IL2Patch directory
-2. Create `patch.xml` with your modifications
-3. Run IL2Patch
-4. Collect modified APK (`signed.apk` or `aligned.apk`)
+1. **APK Placement:** Place the target APK file in the IL2Patch directory.
+2. **Patch Definition:** Create a `patch.xml` file that defines the modifications you wish to apply.
+3. **Execution:** Run IL2Patch. The tool will guide you through the automated patching process.
+4. **Output:** Retrieve the modified APK file (either `signed.apk` or `aligned.apk`) from the output directory.
 
-### Keystore
+### Initial Configuration
 
-A debug keystore is included in the `keystore` folder:
-- `debug.keystore`
-- `password.txt` (contains: android)
+Upon the first execution, IL2Patch will prompt you for:
 
-For production use, create your own keystore:
+* Location of the Android SDK.
+* Preferred version of the Build Tools.
+* Preferences for Zipalign and APK signing.
+
+These settings are stored in `config.xml` for future sessions.
+
+## 🔑 Keystore Management
+
+### Debug Keystore
+
+A debug keystore is included in the `keystore` folder for testing purposes:
+
+* `debug.keystore`
+* `password.txt` (contains the password: `android`)
+
+
+### Production Keystore
+
+For production releases, it is highly recommended to generate your own keystore using the following command:
+
 ```bash
 keytool -genkey -v -keystore android.keystore -alias android -keyalg RSA -keysize 2048 -validity 10000
 ```
 
-## Patch Format
 
-Patches must be enclosed in proper XML structure:
+## 📝 Patch Format: `patch.xml`
+
+Patches are defined in an XML format, allowing for structured and organized modifications.
+
+### XML Structure
+
+All patches must be enclosed within the `<Patches>` root element:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -60,6 +89,20 @@ Patches must be enclosed in proper XML structure:
     <!-- Patches go here -->
 </Patches>
 ```
+
+
+### Patch Definition
+
+Each `<Patch>` element represents a single modification and requires the `arch` attribute to specify the target architecture.
+
+```xml
+<Patch arch="arm64-v8a">
+    <Description>No Recoil</Description>
+    <Find>1f2003d5202640b9</Find>
+    <Replace>1f2003d51f2003d5</Replace>
+</Patch>
+```
+
 
 ### Example Patches
 
@@ -84,31 +127,18 @@ Patches must be enclosed in proper XML structure:
 </Patches>
 ```
 
+
 ### Supported Hex Formats
 
-When defining hex patterns, the `Find` and `Replace` fields support various formats:
+The `Find` and `Replace` elements support multiple hex formats:
 
-1. **Standard continuous hex string**:  
-   `600080520200001440008052`
+1. **Continuous Hex String:** `600080520200001440008052`
+2. **Space-Separated Hex Values:** `00 d8 21 5e 00 20 28 1e 60 00 80 52`
+3. **Hex Values with `0x` Prefix:** `0x00 0xd8 0x21 0x5e 0x00 0x20 0x28 0x1e 0x60 0x00 0x80 0x52`
+4. **Comma-Separated Hex Values with `0x` Prefix:** `0x00, 0xd8, 0x21, 0x5e, 0x00, 0x20, 0x28, 0x1e, 0x60, 0x00, 0x80, 0x52`
 
-2. **Space-separated hex values**:  
-   `00 d8 21 5e 00 20 28 1e 60 00 80 52`
+## ⚠️ Disclaimer
 
-3. **Hex values with `0x` prefix**:  
-   `0x00 0xd8 0x21 0x5e 0x00 0x20 0x28 0x1e 0x60 0x00 0x80 0x52`
+IL2Patch is provided for educational and research purposes only. Users are solely responsible for compliance with applicable terms of service and local regulations. The developers of IL2Patch assume no liability for misuse of this tool.
 
-4. **Comma-separated hex values with `0x` prefix**:  
-   `0x00, 0xd8, 0x21, 0x5e, 0x00, 0x20, 0x28, 0x1e, 0x60, 0x00, 0x80, 0x52`
-
-## Build Tools Setup
-
-First run will prompt for:
-- Android SDK location
-- Build Tools version selection
-- Zipalign/signing preferences
-
-Configuration saves to `config.xml`
-
-## Disclaimer
-
-This tool is for educational and research purposes only. Users are responsible for compliance with applicable terms of service and local regulations.
+<div style="text-align: center">⁂</div>
